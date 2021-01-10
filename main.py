@@ -2,8 +2,21 @@ import feedparser
 import time
 import requests
 import json
+import tweepy
 
-url = "DISCORD'S WEBHOCK URL HERE"
+# Twitter credentials
+twitter_enabled = False
+consumer_key = None
+consumer_secret = None
+key = None
+secret = None
+
+if twitter_enabled is True:
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(key, secret)
+    api = tweepy.API(auth)
+
+url = "DISCORD'S WEBHOOK HERE"
 last_update = None
 update_loop = 60
 
@@ -29,6 +42,9 @@ if __name__ == "__main__":
                                    "text":feed_entries[0]["published"]
                                }
                                }]
+            if twitter_enabled is True:
+                api.update_status(f"SÍ\n{feed_entries[0]['link']}")
+
             status = send_request(url, data)
             last_update = feed_entries[0]["link"]
         time.sleep(update_loop)
